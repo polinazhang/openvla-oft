@@ -4,6 +4,18 @@ run_libero_eval.py
 Evaluates a trained policy in a LIBERO simulation benchmark task suite.
 """
 
+######### Backward compatiability with the libero package ############
+# PyTorch version < 2.6.0 defaults to weights_only=False, while >= 2.6.0 defaults to True
+# This block ensures weights_only=False
+import torch
+torch_load_orig = torch.load
+def torch_load_default_weights_only_false(*args, **kwargs):
+    if "weights_only" not in kwargs:
+        kwargs["weights_only"] = False
+    return torch_load_orig(*args, **kwargs)
+torch.load = torch_load_default_weights_only_false
+##############################################################################
+
 import json
 import logging
 import os
